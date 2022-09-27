@@ -28,12 +28,12 @@ func main() {
 func loginUser(user *gin.Context) {
 	var newLogin login
 
-	if err := user.BindJSON(&newLogin); err != nil {
-		user.IndentedJSON(http.StatusBadRequest, err)
+	if err := user.ShouldBindJSON(&newLogin); err != nil {
+		user.JSON(http.StatusBadRequest, "Missing information")
 		return
 	}
 
-	user.BindJSON(&newLogin)
+	user.ShouldBindJSON(&newLogin)
 	logins = append(logins, newLogin)
-	user.IndentedJSON(http.StatusCreated, "User created")
+	user.IndentedJSON(http.StatusAccepted, "User created")
 }
