@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,13 +17,15 @@ type tweet struct {
 }
 
 var logins = []login{}
-var tweets = []tweet{}
+var tweets = []tweet{
+	{Username: "eae", Tweet: "eaeae"},
+}
 
 func main() {
 	router := gin.Default()
 	router.POST("/sign-up", loginUser)
 	router.POST("/tweets", createTweet)
-	router.GET("/tweets", )
+	router.GET("/tweets", getAllTweets)
 
 	router.Run("localhost:4000")
 }
@@ -40,7 +41,7 @@ func loginUser(user *gin.Context) {
 
 	user.ShouldBindJSON(&newLogin)
 	logins = append(logins, newLogin)
-	user.IndentedJSON(http.StatusAccepted, "User created")
+	user.IndentedJSON(http.StatusCreated, "User created")
 }
 
 func createTweet(reqTweets *gin.Context) {
@@ -56,6 +57,9 @@ func createTweet(reqTweets *gin.Context) {
 		tweets = tweets[1:]
 	}
 	tweets = append(tweets, newTweet)
-	fmt.Println(tweets)
-	reqTweets.IndentedJSON(http.StatusAccepted, "Tweet received")
+	reqTweets.IndentedJSON(http.StatusCreated, "Tweet received")
+}
+
+func getAllTweets(getTweets *gin.Context) {
+	getTweets.IndentedJSON(http.StatusAccepted, tweets)
 }
